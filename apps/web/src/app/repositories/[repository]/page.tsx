@@ -6,6 +6,61 @@ type PageProps = {
   params: Promise<{ repository: string }>;
 };
 
+function MediaGallery({ photos }: { photos?: string[] }) {
+  if (!photos || photos.length === 0) return null;
+  return (
+    <div className="mt-6 grid grid-cols-2 gap-3">
+      {photos.map((src) => (
+        <img key={src} src={src} alt="project photo" className="rounded-lg object-cover w-full h-48" />
+      ))}
+    </div>
+  );
+}
+
+function VideoList({ videos }: { videos?: string[] }) {
+  if (!videos || videos.length === 0) return null;
+  return (
+    <div className="mt-6 space-y-4">
+      {videos.map((v) => {
+        const isYouTube = v.includes("youtube.com") || v.includes("youtu.be");
+        if (isYouTube) {
+          const src = v.includes("embed") ? v : v.replace("watch?v=", "embed/").replace("youtu.be/", "youtube.com/embed/");
+          return (
+            <div key={v} className="w-full aspect-video overflow-hidden rounded-lg">
+              <iframe src={src} title="video" frameBorder={0} allowFullScreen className="w-full h-full"></iframe>
+            </div>
+          );
+        }
+
+        return (
+          <video key={v} controls className="w-full rounded-lg">
+            <source src={v} />
+            Your browser does not support the video tag.
+          </video>
+        );
+      })}
+    </div>
+  );
+}
+
+function Timeline({ timeline }: { timeline?: { date: string; text: string }[] }) {
+  if (!timeline || timeline.length === 0) return null;
+  const sorted = [...timeline].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  return (
+    <div className="mt-6">
+      <h3 className="text-sm font-semibold text-white/85">Timeline</h3>
+      <ol className="mt-3 space-y-3">
+        {sorted.map((t) => (
+          <li key={t.date} className="flex gap-3">
+            <div className="min-w-[90px] text-xs text-white/60">{new Date(t.date).toLocaleDateString()}</div>
+            <div className="text-sm text-white/85">{t.text}</div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
 export default async function RepositoryPage({ params }: PageProps) {
   const { repository } = await params;
   const page = await loadRepositoryPage(repository);
@@ -47,6 +102,10 @@ export default async function RepositoryPage({ params }: PageProps) {
             );
           })}
         </div>
+
+        <MediaGallery photos={page.photos} />
+        <VideoList videos={page.videos} />
+        <Timeline timeline={page.timeline} />
 
         {page.githubRepo ? (
           <div className="mt-6">

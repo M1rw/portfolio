@@ -101,7 +101,17 @@ export const RepositoryPageSchema = z.object({
   title: z.string(),
   summary: z.string().optional(),
   body: RevisionBodySchema,
-  githubRepo: z.string().optional()
+  githubRepo: z.string().optional(),
+  photos: z.array(z.string()).optional(),
+  videos: z.array(z.string()).optional(),
+  timeline: z
+    .array(
+      z.object({
+        date: z.string(),
+        text: z.string()
+      })
+    )
+    .optional()
 });
 
 export type RepositoryPage = z.infer<typeof RepositoryPageSchema>;

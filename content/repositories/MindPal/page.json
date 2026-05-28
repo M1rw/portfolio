@@ -18,4 +18,16 @@
       }
     ]
   }
+  ,
+  "photos": [
+    "https://via.placeholder.com/800x400.png?text=MindPal+1",
+    "https://via.placeholder.com/800x400.png?text=MindPal+2"
+  ],
+  "videos": [
+    "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+  ],
+  "timeline": [
+    { "date": "2026-05-01", "text": "Initial prototype completed." },
+    { "date": "2026-05-15", "text": "Added moderation and coping prompts." }
+  ]
 }
