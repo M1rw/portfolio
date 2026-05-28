@@ -1,10 +1,12 @@
-# hey, i'm miljte
+# hey, i'm m1rw
 
-welcome to my corner of the web. this is where i keep my thoughts, projects, and whatever i'm working on at the moment.
+welcome to my corner of the web. this is where i keep my thoughts, public github projects, and whatever i'm working on at the moment.
 
 ## what's here
 
 **a minimal resume/cv** — the essentials about my experience, skills, and what i've built. clean layout, no fluff.
+
+**config-driven content** — the display name, contact links, and featured public projects live in `content/config.json`.
 
 **built with modern tech** — next.js 16, react 19, tailwind, framer motion. it's fast, responsive, and actually looks good.
 
@@ -19,7 +21,7 @@ welcome to my corner of the web. this is where i keep my thoughts, projects, and
 
 ## how to reach me
 
-check the contact section on [my site](https://miljte.vercel.app) or find me on **github**.
+check the contact section on the site or find me on **github**.
 
 ---
 

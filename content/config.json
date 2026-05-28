@@ -1,0 +1,34 @@
+{
+  "displayName": "M1rw",
+  "githubUsername": "M1rw",
+  "siteTitle": "M1rw - Gravity Feed",
+  "siteDescription": "A config-driven portfolio with public GitHub projects and contact links.",
+  "contacts": [
+    {
+      "label": "GitHub",
+      "value": "M1rw",
+      "href": "https://github.com/M1rw"
+    },
+    {
+      "label": "Email",
+      "value": "hello@m1rw.dev",
+      "href": "mailto:hello@m1rw.dev"
+    },
+    {
+      "label": "LinkedIn",
+      "value": "linkedin.com/in/m1rw",
+      "href": "https://www.linkedin.com/in/m1rw/"
+    },
+    {
+      "label": "X",
+      "value": "@m1rw",
+      "href": "https://x.com/m1rw"
+    }
+  ],
+  "projects": {
+    "sectionTitle": "Public Projects",
+    "sectionSummary": "A live showcase of public GitHub repositories, ordered and curated from config.json.",
+    "displayCount": 6,
+    "featuredRepositories": []
+  }
+}

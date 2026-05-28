@@ -1,6 +1,7 @@
 import Image from "next/image";
+import { loadSiteConfig } from "@/lib/content/config";
 import { loadFeed } from "@/lib/content/server";
-import { loadGitHubProfile } from "@/lib/github/server";
+import { loadGitHubProfile, loadGitHubProjects } from "@/lib/github/server";
 import { ResumeHeaderActions } from "@/components/ResumeHeaderActions";
 
 type SectionKind = "about" | "skills" | "experience" | "projects";
@@ -38,9 +39,69 @@ function Blocks({ blocks }: { blocks: Block[] }) {
   );
 }
 
+function formatUpdatedDate(dateString: string) {
+  return new Intl.DateTimeFormat(undefined, {
+    month: "short",
+    day: "numeric",
+    year: "numeric"
+  }).format(new Date(dateString));
+}
+
+function formatCount(value: number) {
+  return new Intl.NumberFormat(undefined, { notation: "compact" }).format(value);
+}
+
+function ProjectGrid({ projects }: { projects: Awaited<ReturnType<typeof loadGitHubProjects>> }) {
+  if (projects.length === 0) {
+    return <p className="leading-7 text-white/70">No public projects are configured yet.</p>;
+  }
+
+  return (
+    <div className="mt-4 grid gap-4 md:grid-cols-2">
+      {projects.map((project) => (
+        <article key={project.name} className="rounded-2xl border border-white/10 bg-black/20 p-4 transition-colors hover:bg-white/[0.06]">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <h3 className="text-base font-semibold text-white/95">{project.displayName}</h3>
+              <p className="mt-1 text-sm leading-6 text-white/70">
+                {project.description ?? "Public GitHub repository."}
+              </p>
+            </div>
+            <span className="rounded-full border border-white/10 px-2.5 py-1 text-[11px] uppercase tracking-[0.2em] text-white/55">
+              Public
+            </span>
+          </div>
+
+          <div className="mt-4 flex flex-wrap gap-2 text-xs text-white/65">
+            {project.language ? <span className="rounded-full bg-white/6 px-2.5 py-1">{project.language}</span> : null}
+            <span className="rounded-full bg-white/6 px-2.5 py-1">{formatCount(project.stars)} stars</span>
+            <span className="rounded-full bg-white/6 px-2.5 py-1">{formatCount(project.forks)} forks</span>
+            <span className="rounded-full bg-white/6 px-2.5 py-1">Updated {formatUpdatedDate(project.updatedAt)}</span>
+          </div>
+
+          <div className="mt-4 flex flex-wrap items-center gap-3 text-sm">
+            <a href={project.htmlUrl} target="_blank" rel="noreferrer" className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-white/90 hover:bg-white/15">
+              GitHub Repo
+            </a>
+            {project.homepage ? (
+              <a href={project.homepage} target="_blank" rel="noreferrer" className="text-white/65 hover:text-white/90 hover:underline">
+                Live site
+              </a>
+            ) : null}
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+}
+
 export default async function Home() {
-  const items = await loadFeed();
-  const profile = await loadGitHubProfile();
+  const config = await loadSiteConfig();
+  const [items, profile, repositoryProjects] = await Promise.all([
+    loadFeed(),
+    loadGitHubProfile(config.githubUsername),
+    loadGitHubProjects(config.githubUsername, config.projects.featuredRepositories, config.projects.displayCount ?? 6)
+  ]);
 
   const byKind = (kind: SectionKind) =>
     items.find((x) => x.post.type === "section" && x.revision.sectionKind === kind) ?? null;
@@ -58,7 +119,7 @@ export default async function Home() {
             <Image src={profile.avatarUrl} alt={profile.name ?? profile.login} width={56} height={56} />
           </div>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-white/95">{profile.name ?? profile.login}</h1>
+            <h1 className="text-2xl font-bold tracking-tight text-white/95">{profile.name ?? config.displayName}</h1>
             <div className="mt-1 text-sm text-white/70">@{profile.login}</div>
             {profile.bio ? <p className="mt-2 max-w-prose text-sm leading-7 text-white/80">{profile.bio}</p> : null}
           </div>
@@ -80,12 +141,18 @@ export default async function Home() {
 
           <Section title="Contact">
             <ul className="space-y-2 text-sm text-white/85">
-              <li>
-                <span className="text-white/60">GitHub: </span>
-                <a href={profile.htmlUrl} target="_blank" className="hover:underline" rel="noreferrer">
-                  {profile.login}
-                </a>
-              </li>
+              {config.contacts.map((contact) => (
+                <li key={`${contact.label}-${contact.value}`} className="flex flex-col gap-0.5 rounded-xl border border-white/8 bg-black/10 p-3">
+                  <span className="text-xs uppercase tracking-[0.18em] text-white/45">{contact.label}</span>
+                  {contact.href ? (
+                    <a href={contact.href} target="_blank" className="text-white/90 hover:underline" rel="noreferrer">
+                      {contact.value}
+                    </a>
+                  ) : (
+                    <span className="text-white/80">{contact.value}</span>
+                  )}
+                </li>
+              ))}
             </ul>
           </Section>
         </aside>
@@ -111,11 +178,15 @@ export default async function Home() {
           ) : null}
 
           {projects ? (
-            <Section title={projects.revision.title ?? "Projects"}>
+            <Section title={config.projects.sectionTitle ?? projects.revision.title ?? "Projects"}>
               {projects.revision.summary ? (
                 <p className="leading-7 text-white/80">{projects.revision.summary}</p>
               ) : null}
               <Blocks blocks={projects.revision.body.blocks} />
+              {config.projects.sectionSummary ? (
+                <p className="mt-4 text-sm leading-7 text-white/70">{config.projects.sectionSummary}</p>
+              ) : null}
+              <ProjectGrid projects={repositoryProjects} />
             </Section>
           ) : null}
 

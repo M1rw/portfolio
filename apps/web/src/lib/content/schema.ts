@@ -8,6 +8,39 @@ export const TimelineSchema = z.object({
 
 export type Timeline = z.infer<typeof TimelineSchema>;
 
+export const SiteContactSchema = z.object({
+  label: z.string(),
+  value: z.string(),
+  href: z.string().optional()
+});
+
+export const FeaturedRepositorySchema = z.object({
+  name: z.string(),
+  label: z.string().optional(),
+  description: z.string().optional(),
+  homepage: z.string().optional()
+});
+
+export const SiteConfigSchema = z.object({
+  displayName: z.string(),
+  githubUsername: z.string(),
+  siteTitle: z.string(),
+  siteDescription: z.string(),
+  contacts: z.array(SiteContactSchema).default([]),
+  projects: z
+    .object({
+      sectionTitle: z.string().default("Public Projects"),
+      sectionSummary: z.string().optional(),
+      displayCount: z.number().int().positive().optional(),
+      featuredRepositories: z.array(FeaturedRepositorySchema).default([])
+    })
+    .default({ sectionTitle: "Public Projects", featuredRepositories: [] })
+});
+
+export type SiteConfig = z.infer<typeof SiteConfigSchema>;
+export type SiteContact = z.infer<typeof SiteContactSchema>;
+export type FeaturedRepository = z.infer<typeof FeaturedRepositorySchema>;
+
 export const PostSchema = z.object({
   id: z.string(),
   type: z.enum(["text", "media", "project", "section", "thread"]),

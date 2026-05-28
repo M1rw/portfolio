@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { loadSiteConfig } from "@/lib/content/config";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -12,10 +13,13 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Miljte — Gravity Feed",
-  description: "A living personal platform: Twitter-like feed meets interactive installation.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const config = await loadSiteConfig();
+  return {
+    title: config.siteTitle,
+    description: config.siteDescription
+  };
+}
 
 export default function RootLayout({
   children,

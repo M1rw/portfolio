@@ -1,5 +1,5 @@
 {
-  "name": "miljte-platform",
+  "name": "m1rw-platform",
   "private": true,
   "packageManager": "pnpm@10.26.2",
   "description": "Gravity Feed personal platform (web + API)",

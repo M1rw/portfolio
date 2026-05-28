@@ -9,7 +9,7 @@
     "blocks": [
       {
         "type": "paragraph",
-        "text": "Projects appear as heavy objects in the field. Clicking one pulls related posts into orbit." 
+        "text": "Projects appear as heavy objects in the field. The page now surfaces public GitHub repositories from config.json and lets you curate the ordering."
       }
     ]
   },
