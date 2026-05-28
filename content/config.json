@@ -12,7 +12,7 @@
     {
       "label": "Email",
       "value": "hello@m1rw.dev",
-      "href": "mailto:hello@m1rw.dev"
+      "href": "mailto:dimarwo@outlook.com"
     },
     {
       "label": "LinkedIn",
@@ -29,6 +29,12 @@
     "sectionTitle": "Public Projects",
     "sectionSummary": "A live showcase of public GitHub repositories, ordered and curated from config.json.",
     "displayCount": 6,
+    "hiddenRepositories": [
+      "Miljte",
+      "instagram-Account-Creator",
+      "Advancded-Handler-Guilded.js",
+      "claw-code"
+    ],
     "featuredRepositories": []
   }
 }

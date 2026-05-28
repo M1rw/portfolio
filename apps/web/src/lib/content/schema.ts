@@ -32,9 +32,10 @@ export const SiteConfigSchema = z.object({
       sectionTitle: z.string().default("Public Projects"),
       sectionSummary: z.string().optional(),
       displayCount: z.number().int().positive().optional(),
+      hiddenRepositories: z.array(z.string()).default([]),
       featuredRepositories: z.array(FeaturedRepositorySchema).default([])
     })
-    .default({ sectionTitle: "Public Projects", featuredRepositories: [] })
+    .default({ sectionTitle: "Public Projects", hiddenRepositories: [], featuredRepositories: [] })
 });
 
 export type SiteConfig = z.infer<typeof SiteConfigSchema>;

@@ -100,7 +100,12 @@ export default async function Home() {
   const [items, profile, repositoryProjects] = await Promise.all([
     loadFeed(),
     loadGitHubProfile(config.githubUsername),
-    loadGitHubProjects(config.githubUsername, config.projects.featuredRepositories, config.projects.displayCount ?? 6)
+    loadGitHubProjects(
+      config.githubUsername,
+      config.projects.hiddenRepositories,
+      config.projects.featuredRepositories,
+      config.projects.displayCount ?? 6
+    )
   ]);
 
   const byKind = (kind: SectionKind) =>

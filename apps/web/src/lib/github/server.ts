@@ -82,10 +82,12 @@ type FeaturedRepository = {
 
 export async function loadGitHubProjects(
   username: string,
+  hiddenRepositoryNames: string[] = [],
   featuredRepositories: FeaturedRepository[] = [],
   displayCount = 6
 ): Promise<GitHubProject[]> {
   const token = env("GITHUB_TOKEN");
+  const hiddenRepositorySet = new Set(hiddenRepositoryNames.map((name) => name.toLowerCase()));
 
   const res = await fetch(
     `https://api.github.com/users/${encodeURIComponent(username)}/repos?type=public&sort=updated&per_page=100`,
@@ -100,7 +102,10 @@ export async function loadGitHubProjects(
   );
 
   if (!res.ok) {
-    return featuredRepositories.slice(0, displayCount).map((project) => ({
+    return featuredRepositories
+      .filter((project) => !hiddenRepositorySet.has(project.name.toLowerCase()))
+      .slice(0, displayCount)
+      .map((project) => ({
       name: project.name,
       displayName: project.label ?? project.name,
       description: project.description ?? null,
@@ -122,6 +127,7 @@ export async function loadGitHubProjects(
     if (!repo) return;
     const key = repo.name.toLowerCase();
     if (seen.has(key)) return;
+    if (hiddenRepositorySet.has(key)) return;
     seen.add(key);
 
     ordered.push({
@@ -139,6 +145,7 @@ export async function loadGitHubProjects(
 
   if (featuredRepositories.length > 0) {
     for (const featured of featuredRepositories) {
+      if (hiddenRepositorySet.has(featured.name.toLowerCase())) continue;
       pushRepo(repoMap.get(featured.name.toLowerCase()), featured);
     }
   }
