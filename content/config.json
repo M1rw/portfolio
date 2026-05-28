@@ -30,7 +30,8 @@
     "sectionSummary": "A live showcase of public GitHub repositories, ordered and curated from config.json.",
     "displayCount": 6,
     "hiddenRepositories": [
-      "M1rw"
+      "M1rw",
+      "Portfolio"
     ],
     "featuredRepositories": []
   }
