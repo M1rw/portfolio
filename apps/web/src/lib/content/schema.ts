@@ -97,6 +97,15 @@ export const PostRevisionSchema = z.object({
 
 export type PostRevision = z.infer<typeof PostRevisionSchema>;
 
+export const RepositoryPageSchema = z.object({
+  title: z.string(),
+  summary: z.string().optional(),
+  body: RevisionBodySchema,
+  githubRepo: z.string().optional()
+});
+
+export type RepositoryPage = z.infer<typeof RepositoryPageSchema>;
+
 export type FeedItem = {
   post: Post;
   revision: PostRevision;

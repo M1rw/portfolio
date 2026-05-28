@@ -16,11 +16,25 @@ export type GitHubProject = {
   stars: number;
   forks: number;
   updatedAt: string;
+  customPageUrl: string | null;
 };
 
 function env(name: string): string | undefined {
   const v = process.env[name];
   return v && v.trim().length ? v.trim() : undefined;
+}
+
+async function hasRepositoryPage(repository: string): Promise<boolean> {
+  const fs = await import("node:fs/promises");
+  const path = await import("node:path");
+  const pagePath = path.join(process.cwd(), "..", "..", "content", "repositories", repository, "page.json");
+
+  try {
+    await fs.access(pagePath);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 export async function loadGitHubProfile(username: string): Promise<GitHubProfile> {
@@ -114,7 +128,8 @@ export async function loadGitHubProjects(
       language: null,
       stars: 0,
       forks: 0,
-      updatedAt: new Date(0).toISOString()
+      updatedAt: new Date(0).toISOString(),
+      customPageUrl: null
     }));
   }
 
@@ -139,7 +154,8 @@ export async function loadGitHubProjects(
       language: repo.language,
       stars: repo.stargazers_count,
       forks: repo.forks_count,
-      updatedAt: repo.updated_at
+      updatedAt: repo.updated_at,
+      customPageUrl: null
     });
   };
 
@@ -155,5 +171,12 @@ export async function loadGitHubProjects(
     if (ordered.length >= displayCount) break;
   }
 
-  return ordered.slice(0, displayCount);
+  const visibleProjects = ordered.slice(0, displayCount);
+
+  return Promise.all(
+    visibleProjects.map(async (project) => ({
+      ...project,
+      customPageUrl: (await hasRepositoryPage(project.name)) ? `/repositories/${encodeURIComponent(project.name)}` : null
+    }))
+  );
 }

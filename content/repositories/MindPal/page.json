@@ -1,0 +1,21 @@
+{
+  "title": "MindPal",
+  "summary": "A custom showcase page for the MindPal repository.",
+  "githubRepo": "MindPal",
+  "body": {
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": "MindPal is a Discord bot focused on mental health support, resource sharing, and gentle guidance. This page lets you add project-specific details without changing the main portfolio grid."
+      },
+      {
+        "type": "list",
+        "items": [
+          "Custom folder-based page under content/repositories/MindPal/",
+          "Reusable for any other public repository with a matching folder",
+          "Linked from the main project card when the folder exists"
+        ]
+      }
+    ]
+  }
+}

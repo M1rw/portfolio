@@ -83,6 +83,11 @@ function ProjectGrid({ projects }: { projects: Awaited<ReturnType<typeof loadGit
             <a href={project.htmlUrl} target="_blank" rel="noreferrer" className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-white/90 hover:bg-white/15">
               GitHub Repo
             </a>
+            {project.customPageUrl ? (
+              <a href={project.customPageUrl} className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-white/90 hover:bg-white/15">
+                Custom Page
+              </a>
+            ) : null}
             {project.homepage ? (
               <a href={project.homepage} target="_blank" rel="noreferrer" className="text-white/65 hover:text-white/90 hover:underline">
                 Live site
